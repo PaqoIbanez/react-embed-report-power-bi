@@ -4,5 +4,6 @@ const BASE_URL = 'https://embed-token-with-auth.onrender.com';
 
 export const axiosInstance = axios.create( {
   baseURL: BASE_URL,
-  withCredentials: true, // IMPORTANTE para enviar/recibir cookies
+  withCredentials: true,
 } );
+
