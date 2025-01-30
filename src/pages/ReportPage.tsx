@@ -1,10 +1,10 @@
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { models } from 'powerbi-client';
 import { PowerBIEmbed } from 'powerbi-client-react';
 import React, { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axiosInstance';
-import TopBar from '../components/TopBar';
 import '../assets/ReportPage.css';
+import TopBar from '../components/TopBar';
 
 interface EmbedInfo {
   accessToken: string;
@@ -41,36 +41,33 @@ const ReportPage: React.FC = () => {
   return (
     <div style={ { display: 'flex', flexDirection: 'column', height: '100vh' } }>
       <TopBar />
+      <Box>
+        { error && <Typography color="error">{ error }</Typography> }
 
-      <Container maxWidth="lg" sx={ { flexGrow: 1, mt: 2 } }>
-        <Box sx={ { height: '80vh' } }>
-          { error && <Typography color="error">{ error }</Typography> }
-
-          { embedInfo && (
-            <PowerBIEmbed
-              embedConfig={ {
-                type: 'report',
-                embedUrl: embedInfo.embedUrl,
-                accessToken: embedInfo.accessToken,
-                tokenType: models.TokenType.Embed,
-                settings: {
-                  panes: {
-                    pageNavigation: {
-                      position: models.PageNavigationPosition.Left,
-                    },
-                    filters: {
-                      expanded: true,
-                      visible: true,
-                    },
+        { embedInfo && (
+          <PowerBIEmbed
+            embedConfig={ {
+              type: 'report',
+              embedUrl: embedInfo.embedUrl,
+              accessToken: embedInfo.accessToken,
+              tokenType: models.TokenType.Embed,
+              settings: {
+                panes: {
+                  pageNavigation: {
+                    position: models.PageNavigationPosition.Left,
                   },
-                  background: models.BackgroundType.Transparent,
+                  filters: {
+                    expanded: true,
+                    visible: true,
+                  },
                 },
-              } }
-              cssClassName={ reportClass }
-            />
-          ) }
-        </Box>
-      </Container>
+                background: models.BackgroundType.Transparent,
+              },
+            } }
+            cssClassName={ reportClass }
+          />
+        ) }
+      </Box>
     </div>
   );
 };
