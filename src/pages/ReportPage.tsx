@@ -63,7 +63,7 @@ const ReportPage: React.FC = () => {
                   // pageNavigation: { position: models.PageNavigationPosition.Left },
                   filters: { expanded: false, visible: false, },
                 },
-                background: models.BackgroundType.Transparent,
+                // background: models.BackgroundType.Transparent,
               },
             } }
             cssClassName="report-container"
