@@ -14,6 +14,7 @@ interface EmbedInfo {
 const ReportPage: React.FC = () => {
   const [ embedInfo, setEmbedInfo ] = useState<EmbedInfo | null>( null );
   const [ error, setError ] = useState<string>( '' );
+  const reportClass = 'report-container';
 
   useEffect( () => {
     const fetchEmbedInfo = async () => {
@@ -64,7 +65,7 @@ const ReportPage: React.FC = () => {
                   background: models.BackgroundType.Transparent,
                 },
               } }
-              cssClassName="report-style-class"
+              cssClassName={ reportClass }
             />
           ) }
         </Box>
