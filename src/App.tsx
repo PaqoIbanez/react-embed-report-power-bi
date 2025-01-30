@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
-import ReportPage from './pages/ReportPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -21,11 +20,12 @@ function App() {
       {/* Si estoy autenticado, muestro <ReportPage>. 
           Si NO lo estoy, navego a /login. */}
       <Route
-        path="/report"
+        path="/login"
         element={
-          isAuthenticated ? <ReportPage /> : <Navigate to="/login" replace />
+          isAuthenticated ? <Navigate to="/report" /> : <LoginPage />
         }
       />
+
 
 
       {/* Ruta por defecto -> redirige a /login */ }
