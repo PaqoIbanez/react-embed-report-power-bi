@@ -1,42 +1,29 @@
 import { Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import { axiosInstance } from '../api/axiosInstance';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 
-const LoginPage: React.FC = () => {
+const LoginPage = () => {
   const [ email, setEmail ] = useState( '' );
   const [ password, setPassword ] = useState( '' );
   const [ errorMessage, setErrorMessage ] = useState( '' );
-  const navigate = useNavigate();
+  const [ isLoading, setIsLoading ] = useState( false );
 
-  const { isAuthenticated } = useAuth();
-
-  useEffect( () => {
-    if ( isAuthenticated ) {
-      navigate( '/report' );
-    }
-  }, [ isAuthenticated, navigate ] );
-
-  // Instancia local del hook de auth. 
-  // (En una app real, podrías tener un AuthContext global, etc.)
+  // Llamada única al hook
   const { login } = useAuth();
 
   const handleSubmit = async ( e: React.FormEvent ) => {
     e.preventDefault();
+    setIsLoading( true );
     setErrorMessage( '' );
-
     try {
       const response = await axiosInstance.post( '/login', { email, password } );
-      // El backend responde con { token }
       const { token } = response.data;
-      if ( token ) {
-        // Guardamos el token y redirigimos
-        login( token );
-        navigate( '/report' );
-      }
-    } catch ( error: any ) {
+      login( token ); // Almacena en localStorage y setIsAuthenticated(true)
+    } catch ( err ) {
       setErrorMessage( 'Usuario o contraseña incorrectos.' );
+    } finally {
+      setIsLoading( false );
     }
   };
 
@@ -49,7 +36,12 @@ const LoginPage: React.FC = () => {
         <Typography variant="h4" align="center" gutterBottom>
           Iniciar Sesión
         </Typography>
-        <Box component="form" onSubmit={ handleSubmit } sx={ { display: 'flex', flexDirection: 'column', gap: 2 } }>
+
+        <Box
+          component="form"
+          onSubmit={ handleSubmit }
+          sx={ { display: 'flex', flexDirection: 'column', gap: 2 } }
+        >
           <TextField
             label="Correo electrónico"
             variant="outlined"
@@ -72,9 +64,15 @@ const LoginPage: React.FC = () => {
             </Typography>
           ) }
 
-          <Button type="submit" variant="contained" size="large" sx={ { mt: 2 } }>
-            Acceder
+          <Button
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={ isLoading }
+          >
+            { isLoading ? 'Cargando...' : 'Acceder' }
           </Button>
+
         </Box>
       </Paper>
     </Container>

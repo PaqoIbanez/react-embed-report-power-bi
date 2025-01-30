@@ -1,19 +1,25 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
+
+import { useAuth } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import ReportPage from './pages/ReportPage';
 
 function App() {
-  // Si deseas proteger rutas, podrías crear un componente "PrivateRoute"
-  // o usar un hook que verifique la presencia del token.
   const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
-      {/* RUTA LOGIN (pública) */}
-      <Route path="/login" element={<LoginPage />} />
+      {/* Si NO estoy autenticado, muestro <LoginPage>. 
+          Si SÍ lo estoy, navego a /report de inmediato. */}
+      <Route
+        path="/login"
+        element={
+          isAuthenticated ? <Navigate to="/report" replace /> : <LoginPage />
+        }
+      />
 
-      {/* RUTA PARA MOSTRAR REPORTE POWER BI (protegida) */}
+      {/* Si estoy autenticado, muestro <ReportPage>. 
+          Si NO lo estoy, navego a /login. */}
       <Route
         path="/report"
         element={
@@ -21,10 +27,12 @@ function App() {
         }
       />
 
-      {/* Ruta por defecto -> redirige a /login */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+
+      {/* Ruta por defecto -> redirige a /login */ }
+      <Route path="*" element={ <Navigate to="/login" replace /> } />
     </Routes>
   );
 }
+
 
 export default App;
