@@ -9,13 +9,12 @@ import TopBar from '../components/TopBar';
 interface EmbedInfo {
   accessToken: string;
   embedUrl: string;
-  expiry: string; // o Date
+  expiry: string;
 }
 
 const ReportPage: React.FC = () => {
   const [ embedInfo, setEmbedInfo ] = useState<EmbedInfo | null>( null );
   const [ error, setError ] = useState<string>( '' );
-  const reportClass = 'report-container';
 
   useEffect( () => {
     const fetchEmbedInfo = async () => {
@@ -38,12 +37,12 @@ const ReportPage: React.FC = () => {
     fetchEmbedInfo();
   }, [] );
 
+
   return (
     <div style={ { display: 'flex', flexDirection: 'column', height: '100vh' } }>
       <TopBar />
-      <Box>
+      <Box sx={ { flex: 1, display: 'flex', flexDirection: 'column', marginTop: '60px', overflow: 'hidden'  } } >
         { error && <Typography color="error">{ error }</Typography> }
-
         { embedInfo && (
           <PowerBIEmbed
             embedConfig={ {
@@ -53,18 +52,13 @@ const ReportPage: React.FC = () => {
               tokenType: models.TokenType.Embed,
               settings: {
                 panes: {
-                  pageNavigation: {
-                    position: models.PageNavigationPosition.Left,
-                  },
-                  filters: {
-                    expanded: true,
-                    visible: true,
-                  },
+                  // pageNavigation: { position: models.PageNavigationPosition.Left },
+                  filters: { expanded: false, visible: false, },
                 },
                 background: models.BackgroundType.Transparent,
               },
             } }
-            cssClassName={ reportClass }
+            cssClassName="report-container"
           />
         ) }
       </Box>

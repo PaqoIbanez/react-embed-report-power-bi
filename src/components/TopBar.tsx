@@ -13,8 +13,8 @@ const TopBar: React.FC = () => {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar position="fixed" sx={{ width: '100%', top: 0, left: 0 }}>
+      <Toolbar style={{backgroundColor: '#1e2636'}}>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Mi App Power BI
         </Typography>
