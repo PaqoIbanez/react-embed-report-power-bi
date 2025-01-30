@@ -1,6 +1,5 @@
 import { Box, Button, Container, Paper, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { axiosInstance } from '../api/axiosInstance';
 import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
@@ -9,17 +8,18 @@ const LoginPage = () => {
   const [ errorMessage, setErrorMessage ] = useState( '' );
   const [ isLoading, setIsLoading ] = useState( false );
 
-  // Llamada única al hook
   const { login } = useAuth();
 
   const handleSubmit = async ( e: React.FormEvent ) => {
     e.preventDefault();
     setIsLoading( true );
     setErrorMessage( '' );
+
     try {
-      const response = await axiosInstance.post( '/login', { email, password } );
-      const { token } = response.data;
-      login( token ); // Almacena en localStorage y setIsAuthenticated(true)
+      // Llama a nuestro login del contexto
+      await login( email, password );
+      // Redirigir a /report o lo que quieras
+      // O enrutamiento automático si tu app lo hace
     } catch ( err ) {
       setErrorMessage( 'Usuario o contraseña incorrectos.' );
     } finally {
@@ -30,7 +30,12 @@ const LoginPage = () => {
   return (
     <Container
       maxWidth="sm"
-      sx={ { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' } }
+      sx={ {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh'
+      } }
     >
       <Paper elevation={ 3 } sx={ { p: 4, width: '100%' } }>
         <Typography variant="h4" align="center" gutterBottom>
@@ -64,15 +69,9 @@ const LoginPage = () => {
             </Typography>
           ) }
 
-          <Button
-            type="submit"
-            variant="contained"
-            size="large"
-            disabled={ isLoading }
-          >
+          <Button type="submit" variant="contained" size="large" disabled={ isLoading }>
             { isLoading ? 'Cargando...' : 'Acceder' }
           </Button>
-
         </Box>
       </Paper>
     </Container>

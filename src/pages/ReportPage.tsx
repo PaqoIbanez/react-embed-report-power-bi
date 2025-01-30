@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { models } from 'powerbi-client';
 import { PowerBIEmbed } from 'powerbi-client-react';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { axiosInstance } from '../api/axiosInstance';
 import '../assets/ReportPage.css';
 import TopBar from '../components/TopBar';
@@ -15,6 +16,7 @@ interface EmbedInfo {
 const ReportPage: React.FC = () => {
   const [ embedInfo, setEmbedInfo ] = useState<EmbedInfo | null>( null );
   const [ error, setError ] = useState<string>( '' );
+  const navigate = useNavigate();
 
   useEffect( () => {
     const fetchEmbedInfo = async () => {
@@ -30,18 +32,24 @@ const ReportPage: React.FC = () => {
           setError( 'No se pudo obtener la información de Power BI' );
         }
       } catch ( e: any ) {
-        setError( 'Ocurrió un error al solicitar el token de incrustación' );
+        if ( e?.response?.status === 401 ) {
+          // Redirigir a login
+          navigate( '/login' );
+        } else {
+          setError( 'Ocurrió un error al solicitar el token de incrustación' );
+        }
       }
     };
 
     fetchEmbedInfo();
-  }, [] );
+  }, [ navigate ] );
+
 
 
   return (
     <div style={ { display: 'flex', flexDirection: 'column', height: '100vh' } }>
       <TopBar />
-      <Box sx={ { flex: 1, display: 'flex', flexDirection: 'column', marginTop: '60px', overflow: 'hidden'  } } >
+      <Box sx={ { flex: 1, display: 'flex', flexDirection: 'column', marginTop: '60px', overflow: 'hidden' } } >
         { error && <Typography color="error">{ error }</Typography> }
         { embedInfo && (
           <PowerBIEmbed
