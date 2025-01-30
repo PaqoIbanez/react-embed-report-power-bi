@@ -4,6 +4,7 @@ import { PowerBIEmbed } from 'powerbi-client-react';
 import React, { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axiosInstance';
 import TopBar from '../components/TopBar';
+import '../assets/ReportPage.css';
 
 interface EmbedInfo {
   accessToken: string;
